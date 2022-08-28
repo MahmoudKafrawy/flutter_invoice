@@ -182,13 +182,12 @@ class _MyListItemState extends State<MyListItem> {
   @override
   void initState() {
     getInvoiceItems();
-    context.read<InvoiceProvider>().setitems(selectedItemName);
+    context.read<InvoiceProvider>().setitems(selectedItemName, widget.index);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(context.watch<InvoiceProvider>().items);
     return Container(
       height: 75,
       child: Row(
@@ -207,7 +206,9 @@ class _MyListItemState extends State<MyListItem> {
               setState(() {
                 selectedItemName = value!;
               });
-              context.read<InvoiceProvider>().setitems(selectedItemName);
+              context
+                  .read<InvoiceProvider>()
+                  .editItems(selectedItemName, widget.index);
             },
           ),
           DropdownButton(

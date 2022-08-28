@@ -24,8 +24,13 @@ class InvoiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setitems(a) {
-    items.add(a);
+  void setitems(a, b) {
+    items.insert(b, a);
+    notifyListeners();
+  }
+
+  void editItems(a, b) {
+    items.replaceRange(b, b + 1, a);
     notifyListeners();
   }
 
