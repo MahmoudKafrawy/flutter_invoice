@@ -17,12 +17,12 @@ class NewInvoice extends StatefulWidget {
 class _NewInvoiceState extends State<NewInvoice> {
   List<InvoiceItems> selectedItems = [];
   int startIndex = 0;
+  DateTime date = DateTime(2022, 8, 28);
 
   postData() async {
-    print("Hello");
     const String url = "https://63088fe746372013f5807109.mockapi.io/invoices";
     Map data = {
-      'date': '2022-08-26T12:13:00.724Z',
+      'date': '${date}',
       'customerName': context.read<InvoiceProvider>().customerName,
       'invoiceNumber': 26,
       'items':
@@ -39,16 +39,17 @@ class _NewInvoiceState extends State<NewInvoice> {
               body: body)
           .then((value) {
         print(value.body);
+        Navigator.pushNamed(context, "/homepage");
       });
     } catch (e) {
       print(e);
     }
-    setState(() {});
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    print(date);
     return Scaffold(
       appBar: AppBar(title: const Text("New Invoice")),
       body: SingleChildScrollView(
@@ -64,8 +65,8 @@ class _NewInvoiceState extends State<NewInvoice> {
                         const InputDecoration(labelText: 'Customer Namer'),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value!.isEmpty || !value.contains('@')) {
-                        return 'Invalid email!';
+                      if (value!.isEmpty) {
+                        return 'Name cannot be empty!';
                       }
                       return null;
                     },
@@ -73,20 +74,37 @@ class _NewInvoiceState extends State<NewInvoice> {
                       context.read<InvoiceProvider>().setcustomerName(value);
                     },
                   ),
-                  TextFormField(
-                    decoration: const InputDecoration(labelText: 'Date'),
-                    validator: (value) {
-                      if (value!.isEmpty || value.length < 5) {
-                        return 'Password is too short!';
-                      }
-                    },
-                    onChanged: (value) {
-                      context.read<InvoiceProvider>().setdate(value);
-                    },
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    children: [
+                      Text("${date.year}/${date.month}/${date.day}"),
+                      const Spacer(),
+                      ElevatedButton(
+                        child: const Icon(Icons.edit),
+                        onPressed: () async {
+                          final DateTime? newDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: date,
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(2050))
+                              .then((value) {
+                            if (value == null) return;
+                            setState(() {
+                              date = value;
+                            });
+                          });
+                        },
+                      )
+                    ],
                   ),
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 35),
-                    child: Text("Invoice"),
+                    padding: EdgeInsets.symmetric(vertical: 30),
+                    child: Text(
+                      "Invoice Items",
+                      style: TextStyle(color: Colors.red, fontSize: 18),
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,12 +138,15 @@ class _NewInvoiceState extends State<NewInvoice> {
                           startIndex += 1;
                         });
                       },
-                      child: Text("Add item")),
+                      child: const Text("Add item")),
                   ElevatedButton(
                       onPressed: () {
-                        postData();
+                        final isValidForm = _formKey.currentState!.validate();
+                        if (isValidForm) {
+                          postData();
+                        }
                       },
-                      child: Text("Save Invoice")),
+                      child: const Text("Save Invoice")),
                 ],
               ),
             ),
@@ -146,8 +167,6 @@ class MyListItem extends StatefulWidget {
 
 class _MyListItemState extends State<MyListItem> {
   List<Item> invoiceItems = getInvoiceItems();
-  List<InvoiceItems> selectedItems = [];
-  int startIndex = 0;
   late Item selectedItemName = invoiceItems[0];
   List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   int selectedNum = 1;
@@ -163,6 +182,7 @@ class _MyListItemState extends State<MyListItem> {
   @override
   void initState() {
     getInvoiceItems();
+    context.read<InvoiceProvider>().setitems(selectedItemName);
     super.initState();
   }
 
