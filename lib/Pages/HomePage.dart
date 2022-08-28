@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
-              } else if (snapshot.hasData) {
+              } else if (snapshot.data!.isNotEmpty) {
                 return buildInvoice(snapshot.data!);
               } else {
                 return const Text("No data");
@@ -57,18 +57,24 @@ class _HomePageState extends State<HomePage> {
         itemCount: invoices.length,
         itemBuilder: (context, index) {
           final invoice = invoices[index];
-          return Container(
-            height: 100,
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('ID: ${invoice.id!} '),
-                  Text('Name : ${invoice.customerName!}'),
-                  Text('Items : ${invoice.items!.length}')
-                ],
-              ),
-            ]),
+          return Card(
+            margin: const EdgeInsets.all(15),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('ID: ${invoice.id!} '),
+                    Text('Name : ${invoice.customerName!}'),
+                  ],
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Text('Items : ${invoice.items!}')
+              ]),
+            ),
           );
         },
       );

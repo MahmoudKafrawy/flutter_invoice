@@ -3,7 +3,7 @@ class Invoice {
   int? invoiceNumber;
   String? date;
   String? customerName;
-  List? items;
+  String? items;
 
   Invoice({
     this.id,

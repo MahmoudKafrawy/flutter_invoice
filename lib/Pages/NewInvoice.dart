@@ -39,7 +39,7 @@ class _NewInvoiceState extends State<NewInvoice> {
               body: body)
           .then((value) {
         print(value.body);
-        Navigator.pushNamed(context, "/homepage");
+        Navigator.pushReplacementNamed(context, "/homepage");
       });
     } catch (e) {
       print(e);
