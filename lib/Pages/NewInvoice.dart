@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:tecfy/Pages/HomePage.dart';
 import 'package:tecfy/models/InvoiceItems.dart';
 import 'package:tecfy/models/Item.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,13 @@ class _NewInvoiceState extends State<NewInvoice> {
               },
               body: body)
           .then((value) {
-        Navigator.pushReplacementNamed(context, "/homepage");
+        // Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
       });
     } catch (e) {
       print(e);
@@ -207,9 +214,7 @@ class _MyListItemState extends State<MyListItem> {
               setState(() {
                 selectedItemName = value!;
               });
-              context
-                  .read<InvoiceProvider>()
-                  .editItems(selectedItemName, widget.index);
+              context.read<InvoiceProvider>().editItems(value, widget.index);
             },
           ),
           DropdownButton(

@@ -8,6 +8,7 @@ class InvoiceProvider with ChangeNotifier {
   List items = [];
 
   String get count => id;
+  List get list => [...items];
 
   void setID(a) {
     id = a;
@@ -30,7 +31,7 @@ class InvoiceProvider with ChangeNotifier {
   }
 
   void editItems(a, b) {
-    items.replaceRange(b, b + 1, a);
+    items[b] = a;
     notifyListeners();
   }
 

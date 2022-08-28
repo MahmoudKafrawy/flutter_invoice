@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:tecfy/Pages/NewInvoice.dart';
 import 'package:tecfy/models/Invoice.dart';
 import 'package:http/http.dart' as http;
 
@@ -46,7 +47,13 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (() {
-          Navigator.pushNamed(context, "/newinvoice");
+          // Navigator.pushNamed(context, "/newinvoice");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewInvoice(),
+            ),
+          );
         }),
         child: const Icon(Icons.add),
       ),
@@ -65,8 +72,8 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('ID: ${invoice.id!} '),
-                    Text('Name : ${invoice.customerName!}'),
+                    Text('ID: ${invoice.id} '),
+                    Text('Name : ${invoice.customerName}'),
                   ],
                 ),
                 const SizedBox(
