@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:tecfy/models/InvoiceItems.dart';
 import 'package:tecfy/models/Item.dart';
@@ -19,6 +18,7 @@ class _NewInvoiceState extends State<NewInvoice> {
   int startIndex = 0;
   DateTime date = DateTime(2022, 8, 28);
 
+  //Post data to api
   postData() async {
     const String url = "https://63088fe746372013f5807109.mockapi.io/invoices";
     Map data = {
@@ -29,7 +29,6 @@ class _NewInvoiceState extends State<NewInvoice> {
           "${context.read<InvoiceProvider>().items.map((item) => item.name).toList()}",
     };
     var body = json.encode(data);
-    print(body);
     try {
       var response = await http
           .post(Uri.parse(url),
@@ -38,7 +37,6 @@ class _NewInvoiceState extends State<NewInvoice> {
               },
               body: body)
           .then((value) {
-        print(value.body);
         Navigator.pushReplacementNamed(context, "/homepage");
       });
     } catch (e) {
@@ -49,7 +47,6 @@ class _NewInvoiceState extends State<NewInvoice> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    print(date);
     return Scaffold(
       appBar: AppBar(title: const Text("New Invoice")),
       body: SingleChildScrollView(
@@ -166,10 +163,14 @@ class MyListItem extends StatefulWidget {
 }
 
 class _MyListItemState extends State<MyListItem> {
+  //Map date to list of Item class
   List<Item> invoiceItems = getInvoiceItems();
   late Item selectedItemName = invoiceItems[0];
+
+  //List of numbers for quantity picker
   List<int> numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   int selectedNum = 1;
+
   static List<Item> getInvoiceItems() {
     const data = [
       {"id": 1, "Name": "Black", "Price": 5},
@@ -216,7 +217,7 @@ class _MyListItemState extends State<MyListItem> {
             items: numbers
                 .map((item) => DropdownMenuItem<int>(
                       value: item,
-                      child: Text("${item}"),
+                      child: Text("$item"),
                     ))
                 .toList(),
             onChanged: (int? value) {
